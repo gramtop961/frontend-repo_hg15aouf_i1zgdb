@@ -5,42 +5,160 @@
 @layer base {
   :root {
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-geist: 'Geist', system-ui, sans-serif;
-    --font-geist-mono: 'Geist Mono', monospace;
-    --font-mona: 'Mona Sans', system-ui, sans-serif;
-    --font-ibm-plex: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-manrope: 'Manrope', system-ui, sans-serif;
+    --neon-cyan: #00eaff;
+    --neon-magenta: #ff007d;
+    --neon-purple: #9c27ff;
+    --chrome: #c0c0c0;
+    --deep-black: #000000;
   }
 
   html {
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
+    background: #000;
+    color-scheme: dark;
   }
 
   body {
-    @apply antialiased;
+    @apply antialiased bg-black text-white;
+    background-image: radial-gradient(ellipse at center, rgba(156,39,255,0.12), transparent 60%);
+    overflow-x: hidden;
   }
 }
 
-/* Custom utility classes for shadcn/ui patterns */
-@layer utilities {
-  .animate-in {
-    animation-name: animateIn;
-    animation-duration: 350ms;
-    --tw-enter-opacity: initial;
-    --tw-enter-scale: initial;
-    --tw-enter-rotate: initial;
-    --tw-enter-translate-x: initial;
-    --tw-enter-translate-y: initial;
-  }
-
-  .animate-out {
-    animation-name: animateOut;
-    animation-duration: 350ms;
-    --tw-exit-opacity: initial;
-    --tw-exit-scale: initial;
-    --tw-exit-rotate: initial;
-    --tw-exit-translate-x: initial;
-    --tw-exit-translate-y: initial;
-  }
+/* Global cinematic overlays triggered by JS */
+.scan-beam::before {
+  content: '';
+  position: fixed;
+  left: 0; right: 0; top: -2px; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,234,255,0.9), transparent);
+  filter: drop-shadow(0 0 8px rgba(0,234,255,0.9));
+  animation: scan-h 0.5s ease-out forwards;
+  pointer-events: none;
+  z-index: 60;
 }
+@keyframes scan-h { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100vh); opacity: 0; } }
+
+.neon-ripple::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0,234,255,0.25), rgba(255,0,125,0.12) 30%, transparent 60%);
+  animation: ripple 0.6s ease-out forwards;
+  pointer-events: none; z-index: 50;
+}
+@keyframes ripple { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.4);} }
+
+.glitch-burst::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 55;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0,234,255,0.08) 0 2px, transparent 2px 6px);
+  animation: glitch-burst 0.7s steps(10) forwards;
+}
+@keyframes glitch-burst { 0%{opacity:.6; transform: translate(0,0);} 30%{opacity:.4; transform: translate(-2px,1px);} 60%{opacity:.3; transform: translate(2px,-1px);} 100%{opacity:0; transform: translate(0,0);} }
+
+/* Digital rain */
+.digital-rain {
+  background-image:
+    linear-gradient(180deg, rgba(0,234,255,0.2) 2px, transparent 2px),
+    linear-gradient(180deg, rgba(156,39,255,0.15) 1px, transparent 1px);
+  background-size: 2px 18px, 1px 12px;
+  background-repeat: repeat;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  animation: rain-fall 12s linear infinite;
+}
+@keyframes rain-fall { from { background-position: 0 -200px, 0 -120px;} to { background-position: 0 200px, 0 120px;} }
+
+/* Hologram headline */
+.hologram-text {
+  text-shadow:
+    0 0 6px rgba(0,234,255,0.8),
+    0 0 14px rgba(156,39,255,0.7),
+    0 0 28px rgba(255,0,125,0.4);
+  letter-spacing: 0.18em;
+}
+
+/* Scanline flicker on copy */
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+.scanline::after {
+  content: '';
+  position: absolute; left: 0; right: 0; top: -100%; height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 100%
+  );
+  animation: scanline 3s linear infinite;
+}
+@keyframes scanline { 0%{ transform: translateY(-100%);} 100%{ transform: translateY(100%);} }
+
+/* Glitch text effect */
+.glitch-text {
+  position: relative;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  clip-path: polygon(0 2%, 100% 2%, 100% 40%, 0 40%);
+}
+.glitch-text::before { color: rgba(0,234,255,0.9); transform: translate(1px,0); mix-blend-mode: screen; }
+.glitch-text::after { color: rgba(255,0,125,0.9); transform: translate(-1px,0); mix-blend-mode: screen; }
+
+/* Holographic grid */
+.hologrid {
+  background-image:
+    linear-gradient(rgba(0,234,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,234,255,0.08) 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
+  filter: drop-shadow(0 0 8px rgba(0,234,255,0.2));
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+}
+
+/* Purple fog */
+.purple-fog {
+  background: radial-gradient(circle at 20% 30%, rgba(156,39,255,0.15), transparent 40%),
+              radial-gradient(circle at 80% 70%, rgba(255,0,125,0.12), transparent 45%);
+  filter: blur(20px);
+  animation: fog-move 18s ease-in-out infinite alternate;
+}
+@keyframes fog-move { from { transform: translateX(-3%);} to { transform: translateX(3%);} }
+
+/* Custom scroll */
+.custom-scroll { scrollbar-width: thin; scrollbar-color: rgba(156,39,255,0.6) rgba(0,0,0,0.4); }
+.custom-scroll::-webkit-scrollbar { width: 8px; }
+.custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+.custom-scroll::-webkit-scrollbar-thumb { background: linear-gradient(var(--neon-purple), var(--neon-magenta)); border-radius: 999px; }
+
+/* Glitch particle stripes */
+.animate-glitch-x { animation: glitch-x 2.8s ease-in-out infinite; }
+@keyframes glitch-x { 0%,100%{ transform: translateX(0);} 25%{ transform: translateX(10px);} 50%{ transform: translateX(-6px);} 75%{ transform: translateX(4px);} }
+
+/* Light trails */
+.animate-trail-x { animation: trail-x 5s linear infinite; }
+@keyframes trail-x { 0%{ transform: translateX(-20vw);} 100%{ transform: translateX(120vw);} }
+
+/* City scan background */
+.city-scan {
+  background: repeating-linear-gradient(0deg, rgba(192,192,192,0.06) 0 1px, transparent 1px 3px);
+  animation: city-scan 10s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+@keyframes city-scan { from { background-position-y: 0; } to { background-position-y: 200px; } }
+
+/* Scanline overlay for message bubbles */
+.scanline-overlay {
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 4px);
+  mix-blend-mode: screen;
+  border-radius: 0.75rem;
+}
+
+/* Utility delays */
+.delay-150 { animation-delay: .15s !important; }
+.delay-300 { animation-delay: .3s !important; }
+.delay-500 { animation-delay: .5s !important; }
