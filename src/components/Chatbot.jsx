@@ -85,6 +85,11 @@ export default function Chatbot() {
     }
   }
 
+  const handleClear = () => {
+    // Full refresh to reset all transient visual effects and state
+    window.location.reload()
+  }
+
   return (
     <section className="relative w-full min-h-screen bg-black text-white overflow-hidden">
       {/* Ambient background */}
@@ -120,17 +125,21 @@ export default function Chatbot() {
 
           {/* Input */}
           <div className="relative z-10 border-t border-cyan-300/20 p-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
                 placeholder="Transmit to the grid…"
-                className="flex-1 h-12 resize-none rounded-xl bg-black/60 px-4 py-3 text-cyan-100 placeholder-cyan-300/40 outline-none border border-cyan-300/30 focus:border-cyan-300/60 shadow-[inset_0_0_12px_rgba(0,234,255,0.15)]"
+                className="flex-1 h-12 min-w-[220px] resize-none rounded-xl bg-black/60 px-4 py-3 text-cyan-100 placeholder-cyan-300/40 outline-none border border-cyan-300/30 focus:border-cyan-300/60 shadow-[inset_0_0_12px_rgba(0,234,255,0.15)]"
               />
               <button onClick={send} className="relative overflow-hidden rounded-xl border border-fuchsia-400/60 px-5 py-3 text-fuchsia-100 bg-black/60 hover:bg-fuchsia-500/20 transition">
                 <span className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 hover:opacity-100 transition" />
                 <span className="relative">Send</span>
+              </button>
+              <button onClick={handleClear} className="relative overflow-hidden rounded-xl border border-cyan-400/60 px-5 py-3 text-cyan-100 bg-black/60 hover:bg-cyan-500/20 transition">
+                <span className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-fuchsia-500/10 to-purple-500/10 opacity-0 hover:opacity-100 transition" />
+                <span className="relative">Clear</span>
               </button>
             </div>
           </div>
