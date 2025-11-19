@@ -55,10 +55,11 @@ export default function Chatbot() {
 
     setLoading(true)
     try {
-      const res = await fetch(WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userText })
+      const url = new URL(WEBHOOK)
+      url.searchParams.set('message', userText)
+
+      const res = await fetch(url.toString(), {
+        method: 'POST'
       })
       const data = await res.json().catch(() => ({}))
       const botText = data.reply || data.message || 'Response channel engaged. Holographic cognition active.'
